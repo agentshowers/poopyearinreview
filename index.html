@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>💩 Your 2025 Poop Year in Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-gradient-1: #1a0a2e;
+      --bg-gradient-2: #16213e;
+      --bg-gradient-3: #0f3460;
+      --accent-gold: #f5a623;
+      --accent-warm: #e67e22;
+      --accent-brown: #8b4513;
+      --text-primary: #fff;
+      --text-secondary: rgba(255, 255, 255, 0.7);
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-border: rgba(255, 255, 255, 0.1);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: linear-gradient(135deg, var(--bg-gradient-1) 0%, var(--bg-gradient-2) 50%, var(--bg-gradient-3) 100%);
+      color: var(--text-primary);
+      min-height: 100dvh;
+      position: relative;
+    }
+
+    /* Floating background elements */
+    .bg-shapes {
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .bg-shape {
+      position: absolute;
+      font-size: 3rem;
+      opacity: 0.1;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-30px) rotate(15deg); }
+    }
+
+    /* Progress bar */
+    .progress-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      z-index: 100;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-gold), var(--accent-warm));
+      transition: width 0.3s ease;
+    }
+
+    /* Slide indicators */
+    .slide-indicators {
+      position: fixed;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+      z-index: 100;
+    }
+
+    .indicator {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+      background: var(--accent-gold);
+      transform: scale(1.3);
+    }
+
+    /* Timer bar under active indicator */
+    .timer-bar-container {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100px;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+      z-index: 100;
+    }
+
+    .timer-bar {
+      height: 100%;
+      background: var(--accent-gold);
+      border-radius: 2px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    /* Slideshow container */
+    .slideshow {
+      position: relative;
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      touch-action: pan-y;
+    }
+
+    .slides-wrapper {
+      display: flex;
+      height: 100%;
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 24px;
+      position: relative;
+    }
+
+    /* Slide content styles */
+    .slide-emoji {
+      font-size: 5rem;
+      margin-bottom: 1.5rem;
+      animation: bounce-in 0.6s ease-out;
+    }
+
+    @keyframes bounce-in {
+      0% { transform: scale(0); opacity: 0; }
+      50% { transform: scale(1.2); }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .slide-label {
+      font-size: 0.875rem;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      color: var(--accent-gold);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .slide-value {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 4.5rem;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 0.75rem;
+      background: linear-gradient(135deg, #fff 0%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: value-pop 0.4s ease-out 0.3s both;
+    }
+
+    @keyframes value-pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .slide-unit {
+      font-size: 1.5rem;
+      color: var(--text-secondary);
+      margin-bottom: 1.5rem;
+    }
+
+    .slide-description {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-align: center;
+      max-width: 280px;
+      line-height: 1.6;
+    }
+
+    /* Special slide styles */
+    .slide-intro .slide-emoji {
+      font-size: 6rem;
+    }
+
+    .slide-intro .slide-value {
+      font-size: 2.5rem;
+    }
+
+    .slide-outro .slide-value {
+      font-size: 2rem;
+    }
+
+    /* Comparison card */
+    .comparison-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-top: 1.5rem;
+      width: 100%;
+      max-width: 280px;
+    }
+
+    .comparison-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 8px 0;
+    }
+
+    .comparison-icon {
+      font-size: 1.5rem;
+    }
+
+    .comparison-text {
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .comparison-text strong {
+      color: var(--accent-gold);
+    }
+
+    /* Time distribution chart */
+    .time-chart {
+      display: flex;
+      gap: 4px;
+      align-items: flex-end;
+      height: 80px;
+      margin-top: 1.5rem;
+      padding: 0 10px;
+    }
+
+    .time-bar {
+      flex: 1;
+      background: linear-gradient(to top, var(--accent-warm), var(--accent-gold));
+      border-radius: 4px 4px 0 0;
+      min-width: 20px;
+      transition: height 0.5s ease;
+    }
+
+    .time-labels {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      max-width: 280px;
+      margin-top: 8px;
+    }
+
+    .time-label {
+      font-size: 0.625rem;
+      color: var(--text-secondary);
+    }
+
+    /* Achievement badge */
+    .achievement {
+      background: linear-gradient(135deg, #f5a623 0%, #e67e22 100%);
+      border-radius: 20px;
+      padding: 12px 24px;
+      margin-top: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      animation: shine 2s ease-in-out infinite;
+    }
+
+    @keyframes shine {
+      0%, 100% { box-shadow: 0 0 20px rgba(245, 166, 35, 0.3); }
+      50% { box-shadow: 0 0 40px rgba(245, 166, 35, 0.6); }
+    }
+
+    .achievement-icon {
+      font-size: 1.5rem;
+    }
+
+    .achievement-text {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    /* Navigation arrows */
+    .nav-arrow {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 44px;
+      height: 44px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 50%;
+      color: white;
+      font-size: 1.25rem;
+      cursor: pointer;
+      z-index: 100;
+      opacity: 0.6;
+      transition: all 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .nav-arrow:hover {
+      opacity: 1;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .nav-arrow:disabled {
+      opacity: 0.2;
+      cursor: not-allowed;
+    }
+
+    .nav-prev {
+      left: 12px;
+    }
+
+    .nav-next {
+      right: 12px;
+    }
+
+    /* Share button */
+    .share-btn {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-warm) 100%);
+      border: none;
+      border-radius: 30px;
+      padding: 16px 40px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      color: white;
+      cursor: pointer;
+      margin-top: 2rem;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .share-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(245, 166, 35, 0.4);
+    }
+
+    /* Restart button */
+    .restart-btn {
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 30px;
+      padding: 12px 32px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      margin-top: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .restart-btn:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    /* Swipe hint */
+    .swipe-hint {
+      position: fixed;
+      bottom: 70px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      animation: fade-hint 3s ease-out forwards;
+    }
+
+    @keyframes fade-hint {
+      0%, 70% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    /* Fun stat variations */
+    .stat-highlight {
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .rank-badge {
+      font-size: 1.25rem;
+      background: linear-gradient(135deg, #ffd700 0%, #ffb347 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-weight: 700;
+    }
+
+    /* Summary card */
+    .summary-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 20px;
+      padding: 20px;
+      margin-top: 1rem;
+      width: 100%;
+      max-width: 300px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--card-border);
+    }
+
+    .summary-row:last-child {
+      border-bottom: none;
+    }
+
+    .summary-label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.875rem;
+      color: var(--text-secondary);
+    }
+
+    .summary-label-icon {
+      font-size: 1.25rem;
+    }
+
+    .summary-value {
+      font-family: 'Fredoka', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--accent-gold);
+    }
+
+    .slide-outro .slide-value {
+      font-size: 1.75rem;
+    }
+
+    .slide-outro .slide-emoji {
+      font-size: 4rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- Background shapes -->
+  <div class="bg-shapes" id="bgShapes"></div>
+
+  <!-- Progress bar -->
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Navigation arrows -->
+  <button class="nav-arrow nav-prev" id="prevBtn" aria-label="Previous slide">‹</button>
+  <button class="nav-arrow nav-next" id="nextBtn" aria-label="Next slide">›</button>
+
+  <!-- Slideshow -->
+  <div class="slideshow" id="slideshow">
+    <div class="slides-wrapper" id="slidesWrapper">
+      <!-- Slides will be generated by JavaScript -->
+    </div>
+  </div>
+
+  <!-- Slide indicators -->
+  <div class="slide-indicators" id="indicators"></div>
+
+  <!-- Timer bar -->
+  <div class="timer-bar-container">
+    <div class="timer-bar" id="timerBar"></div>
+  </div>
+
+  <!-- Swipe hint (shown initially) -->
+  <div class="swipe-hint" id="swipeHint">Swipe or tap arrows to navigate</div>
+
+  <script>
+    // Generate random stats
+    function generateStats() {
+      const totalPoops = Math.floor(Math.random() * 400) + 300; // 300-700
+      const daysInYear = 365;
+      const avgPerDay = (totalPoops / daysInYear).toFixed(1);
+      const longestStreak = Math.floor(Math.random() * 200) + 100; // 100-300 days
+      const mostInOneDay = Math.floor(Math.random() * 4) + 3; // 3-6
+      const avgDuration = Math.floor(Math.random() * 12) + 5; // 5-16 minutes
+      const totalHours = Math.floor((totalPoops * avgDuration) / 60);
+      
+      // Time distribution (morning, afternoon, evening, night)
+      const timeDistribution = [
+        Math.floor(Math.random() * 30) + 20, // Morning: 20-50%
+        Math.floor(Math.random() * 25) + 15, // Afternoon: 15-40%
+        Math.floor(Math.random() * 20) + 10, // Evening: 10-30%
+        Math.floor(Math.random() * 15) + 5,  // Night: 5-20%
+      ];
+      const total = timeDistribution.reduce((a, b) => a + b, 0);
+      const normalizedTime = timeDistribution.map(t => Math.round((t / total) * 100));
+      
+      // Find peak time
+      const timeLabels = ['Morning', 'Afternoon', 'Evening', 'Night'];
+      const peakTimeIndex = normalizedTime.indexOf(Math.max(...normalizedTime));
+      const peakTime = timeLabels[peakTimeIndex];
+      
+      // Fun comparisons
+      const booksRead = Math.floor(totalHours / 3); // ~3 hours per book
+      const moviesWatched = Math.floor(totalHours / 2); // ~2 hours per movie
+      const flightsNYLA = Math.floor(totalHours / 6); // ~6 hours per flight
+      
+      // Achievements
+      const achievements = [
+        { icon: '🏆', text: 'Throne Champion' },
+        { icon: '⚡', text: 'Speed Demon' },
+        { icon: '📚', text: 'Scholarly Sitter' },
+        { icon: '🌅', text: 'Early Bird Pooper' },
+        { icon: '🦉', text: 'Night Owl Pooper' },
+        { icon: '🎯', text: 'Consistency King' },
+        { icon: '🚀', text: 'Rocket Launcher' },
+        { icon: '🧘', text: 'Zen Master' },
+      ];
+      const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
+      
+      // Percentile rank
+      const percentile = Math.floor(Math.random() * 30) + 70; // Top 70-100%
+      
+      return {
+        totalPoops,
+        avgPerDay,
+        longestStreak,
+        mostInOneDay,
+        avgDuration,
+        totalHours,
+        timeDistribution: normalizedTime,
+        peakTime,
+        booksRead,
+        moviesWatched,
+        flightsNYLA,
+        achievement: randomAchievement,
+        percentile,
+      };
+    }
+
+    // Create slides based on stats
+    function createSlides(stats) {
+      return [
+        // Intro slide
+        {
+          type: 'intro',
+          emoji: '💩',
+          label: 'Your 2025',
+          value: 'Poop Year in Review',
+          description: "Let's look back at your bathroom adventures this year...",
+        },
+        // Total poops
+        {
+          emoji: '🚽',
+          label: 'Total Poops',
+          value: stats.totalPoops.toLocaleString(),
+          unit: 'visits',
+          description: 'You really kept yourself busy this year!',
+        },
+        // Average per day
+        {
+          emoji: '📊',
+          label: 'Daily Average',
+          value: stats.avgPerDay,
+          unit: 'poops per day',
+          description: "That's your personal rhythm!",
+        },
+        // Longest streak
+        {
+          emoji: '🔥',
+          label: 'Longest Streak',
+          value: stats.longestStreak,
+          unit: 'consecutive days',
+          description: 'Without missing a single day. Impressive consistency!',
+        },
+        // Most in one day
+        {
+          emoji: '💥',
+          label: 'Record Day',
+          value: stats.mostInOneDay,
+          unit: 'poops in one day',
+          description: 'We all have those days. No judgment here.',
+        },
+        // Average duration
+        {
+          emoji: '⏱️',
+          label: 'Avg. Session',
+          value: stats.avgDuration,
+          unit: 'minutes',
+          description: 'Quality time with your thoughts.',
+        },
+        // Peak time
+        {
+          emoji: stats.peakTime === 'Morning' ? '🌅' : stats.peakTime === 'Night' ? '🌙' : '☀️',
+          label: 'Peak Time',
+          value: stats.peakTime,
+          unit: 'is your prime time',
+          description: 'Your body knows when it\'s time.',
+          showTimeChart: true,
+          timeDistribution: stats.timeDistribution,
+        },
+        // Total time
+        {
+          emoji: '⌛',
+          label: 'Time Invested',
+          value: stats.totalHours,
+          unit: 'hours total',
+          description: `That's like reading ${stats.booksRead} books or watching ${stats.moviesWatched} movies!`,
+        },
+        // Percentile
+        {
+          emoji: '🏅',
+          label: 'Your Rank',
+          value: `Top ${100 - stats.percentile}%`,
+          unit: 'of all poopers',
+          description: 'Among our community of bathroom enthusiasts.',
+        },
+        // Achievement
+        {
+          emoji: stats.achievement.icon,
+          label: '2025 Achievement',
+          value: stats.achievement.text,
+          unit: 'unlocked!',
+          description: 'Wear this badge with pride.',
+          showAchievement: true,
+          achievement: stats.achievement,
+        },
+        // Summary
+        {
+          type: 'outro',
+          emoji: '📋',
+          label: 'Your 2025 Summary',
+          value: 'The Highlights',
+          description: '',
+          showSummary: true,
+          stats: stats,
+          showButtons: true,
+        },
+      ];
+    }
+
+    // Render slides
+    function renderSlides(slides) {
+      const wrapper = document.getElementById('slidesWrapper');
+      const indicators = document.getElementById('indicators');
+      
+      wrapper.innerHTML = slides.map((slide, index) => `
+        <div class="slide ${slide.type ? `slide-${slide.type}` : ''}" data-index="${index}">
+          <div class="slide-emoji">${slide.emoji}</div>
+          <div class="slide-label">${slide.label}</div>
+          <div class="slide-value">${slide.value}</div>
+          ${slide.unit ? `<div class="slide-unit">${slide.unit}</div>` : ''}
+          <div class="slide-description">${slide.description}</div>
+          ${slide.showTimeChart ? `
+            <div class="time-chart">
+              ${slide.timeDistribution.map(val => `<div class="time-bar" style="height: ${val}%"></div>`).join('')}
+            </div>
+            <div class="time-labels">
+              <span class="time-label">AM</span>
+              <span class="time-label">Noon</span>
+              <span class="time-label">PM</span>
+              <span class="time-label">Night</span>
+            </div>
+          ` : ''}
+          ${slide.showAchievement ? `
+            <div class="achievement">
+              <span class="achievement-icon">${slide.achievement.icon}</span>
+              <span class="achievement-text">${slide.achievement.text}</span>
+            </div>
+          ` : ''}
+          ${slide.showSummary ? `
+            <div class="summary-card">
+              <div class="summary-row">
+                <span class="summary-label"><span class="summary-label-icon">🚽</span> Total Poops</span>
+                <span class="summary-value">${slide.stats.totalPoops.toLocaleString()}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label"><span class="summary-label-icon">📊</span> Daily Avg</span>
+                <span class="summary-value">${slide.stats.avgPerDay}</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label"><span class="summary-label-icon">🔥</span> Best Streak</span>
+                <span class="summary-value">${slide.stats.longestStreak} days</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label"><span class="summary-label-icon">⏱️</span> Avg Session</span>
+                <span class="summary-value">${slide.stats.avgDuration} min</span>
+              </div>
+              <div class="summary-row">
+                <span class="summary-label"><span class="summary-label-icon">⌛</span> Total Time</span>
+                <span class="summary-value">${slide.stats.totalHours} hrs</span>
+              </div>
+            </div>
+          ` : ''}
+          ${slide.showButtons ? `
+            <button class="share-btn" onclick="shareResults()">Share Your Stats 💩</button>
+            <button class="restart-btn" onclick="restart()">Start Over</button>
+          ` : ''}
+        </div>
+      `).join('');
+      
+      indicators.innerHTML = slides.map((_, index) => `
+        <div class="indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+      `).join('');
+    }
+
+    // Create background shapes
+    function createBackgroundShapes() {
+      const container = document.getElementById('bgShapes');
+      const emojis = ['💩', '🚽', '📱', '⭐', '✨'];
+      
+      for (let i = 0; i < 15; i++) {
+        const shape = document.createElement('div');
+        shape.className = 'bg-shape';
+        shape.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+        shape.style.left = `${Math.random() * 100}%`;
+        shape.style.top = `${Math.random() * 100}%`;
+        shape.style.animationDelay = `${Math.random() * 20}s`;
+        shape.style.animationDuration = `${15 + Math.random() * 10}s`;
+        container.appendChild(shape);
+      }
+    }
+
+    // Slideshow state
+    let currentSlide = 0;
+    let totalSlides = 0;
+    let autoAdvanceTimer = null;
+    let timerInterval = null;
+    let timerProgress = 0;
+    const AUTO_ADVANCE_TIME = 5000;
+
+    // Navigate to slide
+    function goToSlide(index) {
+      if (index < 0 || index >= totalSlides) return;
+      
+      currentSlide = index;
+      const wrapper = document.getElementById('slidesWrapper');
+      wrapper.style.transform = `translateX(-${index * 100}%)`;
+      
+      // Update progress bar
+      const progressBar = document.getElementById('progressBar');
+      progressBar.style.width = `${((index + 1) / totalSlides) * 100}%`;
+      
+      // Update indicators
+      document.querySelectorAll('.indicator').forEach((ind, i) => {
+        ind.classList.toggle('active', i === index);
+      });
+      
+      // Update nav buttons
+      document.getElementById('prevBtn').disabled = index === 0;
+      document.getElementById('nextBtn').disabled = index === totalSlides - 1;
+      
+      // Reset and start auto-advance timer
+      resetAutoAdvance();
+      
+      // Don't auto-advance on last slide
+      if (index < totalSlides - 1) {
+        startAutoAdvance();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides - 1) {
+        goToSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 0) {
+        goToSlide(currentSlide - 1);
+      }
+    }
+
+    function resetAutoAdvance() {
+      if (autoAdvanceTimer) {
+        clearTimeout(autoAdvanceTimer);
+        autoAdvanceTimer = null;
+      }
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+      timerProgress = 0;
+      document.getElementById('timerBar').style.width = '0%';
+    }
+
+    function startAutoAdvance() {
+      timerProgress = 0;
+      const timerBar = document.getElementById('timerBar');
+      
+      timerInterval = setInterval(() => {
+        timerProgress += 100;
+        const percent = (timerProgress / AUTO_ADVANCE_TIME) * 100;
+        timerBar.style.width = `${percent}%`;
+      }, 100);
+      
+      autoAdvanceTimer = setTimeout(() => {
+        nextSlide();
+      }, AUTO_ADVANCE_TIME);
+    }
+
+    // Touch/swipe handling
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    function handleTouchStart(e) {
+      touchStartX = e.changedTouches[0].screenX;
+    }
+
+    function handleTouchEnd(e) {
+      touchEndX = e.changedTouches[0].screenX;
+      handleSwipe();
+    }
+
+    function handleSwipe() {
+      const swipeThreshold = 50;
+      const diff = touchStartX - touchEndX;
+      
+      if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+          nextSlide();
+        } else {
+          prevSlide();
+        }
+      }
+    }
+
+    // Share functionality
+    function shareResults() {
+      const shareText = `💩 My 2025 Poop Year in Review is here! Check out your stats too!`;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Poop Year in Review 2025',
+          text: shareText,
+          url: window.location.href,
+        }).catch(() => {});
+      } else {
+        // Fallback: copy to clipboard
+        navigator.clipboard.writeText(shareText + ' ' + window.location.href)
+          .then(() => alert('Link copied to clipboard!'))
+          .catch(() => alert('Share this page with your friends!'));
+      }
+    }
+
+    // Restart
+    function restart() {
+      resetAutoAdvance();
+      const stats = generateStats();
+      const slides = createSlides(stats);
+      totalSlides = slides.length;
+      renderSlides(slides);
+      goToSlide(0);
+    }
+
+    // Initialize
+    function init() {
+      createBackgroundShapes();
+      
+      const stats = generateStats();
+      const slides = createSlides(stats);
+      totalSlides = slides.length;
+      
+      renderSlides(slides);
+      
+      // Event listeners
+      document.getElementById('prevBtn').addEventListener('click', prevSlide);
+      document.getElementById('nextBtn').addEventListener('click', nextSlide);
+      
+      const slideshow = document.getElementById('slideshow');
+      slideshow.addEventListener('touchstart', handleTouchStart, { passive: true });
+      slideshow.addEventListener('touchend', handleTouchEnd, { passive: true });
+      
+      // Keyboard navigation
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') prevSlide();
+        if (e.key === 'ArrowRight') nextSlide();
+      });
+      
+      // Click on indicators
+      document.getElementById('indicators').addEventListener('click', (e) => {
+        if (e.target.classList.contains('indicator')) {
+          goToSlide(parseInt(e.target.dataset.index));
+        }
+      });
+      
+      // Start slideshow
+      goToSlide(0);
+    }
+
+    // Start when DOM is ready
+    document.addEventListener('DOMContentLoaded', init);
+  </script>
+</body>
+</html>
+
