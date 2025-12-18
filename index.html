@@ -392,25 +392,6 @@
       box-shadow: 0 10px 30px rgba(245, 166, 35, 0.4);
     }
 
-    /* Restart button */
-    .restart-btn {
-      background: transparent;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      border-radius: 30px;
-      padding: 12px 32px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 0.875rem;
-      font-weight: 500;
-      color: var(--text-secondary);
-      cursor: pointer;
-      margin-top: 1rem;
-      transition: all 0.3s ease;
-    }
-
-    .restart-btn:hover {
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
-    }
 
 
     @keyframes fade-hint {
@@ -519,7 +500,7 @@
       
       // Weighted distribution for shits per day (0-6)
       // 1 is most likely, with decreasing probability for higher/lower values
-      const weights = [10, 66, 10, 7, 4, 2, 1]; // weights for 0, 1, 2, 3, 4, 5, 6
+      const weights = [11, 75, 7, 5, 1.3, 0.5, 0.2]; // weights for 0, 1, 2, 3, 4, 5, 6
       const totalWeight = weights.reduce((a, b) => a + b, 0);
       
       function getRandomShitsForDay() {
@@ -798,7 +779,7 @@
           emoji: '💰',
           label: 'Paid to Shit',
           value: stats.paidShitHours > 0 ? `${stats.paidShitHours}h ${stats.paidShitRemainingMins}m` : `${stats.paidShitRemainingMins} min`,
-          unit: 'time spent shitting during work hours',
+          unit: 'during work hours',
           description: `Boss makes a dollar, you make a dime...`,
         },
         // Percentile
@@ -903,7 +884,6 @@
           ` : ''}
           ${slide.showButtons ? `
             <button class="share-btn" onclick="shareResults()">Share Your Stats 💩</button>
-            <button class="restart-btn" onclick="restart()">Start Over</button>
           ` : ''}
         </div>
       `).join('');
@@ -1050,16 +1030,6 @@
           .then(() => alert('Link copied to clipboard!'))
           .catch(() => alert('Share this page with your friends!'));
       }
-    }
-
-    // Restart
-    function restart() {
-      resetAutoAdvance();
-      const stats = generateStats();
-      const slides = createSlides(stats);
-      totalSlides = slides.length;
-      renderSlides(slides);
-      goToSlide(0);
     }
 
     // Initialize
