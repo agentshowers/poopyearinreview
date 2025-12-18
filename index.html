@@ -278,6 +278,18 @@
       color: var(--text-secondary);
     }
 
+    .day-chart {
+      max-width: 280px;
+    }
+
+    .day-chart .time-bar {
+      min-width: 28px;
+    }
+
+    .day-labels {
+      max-width: 280px;
+    }
+
     /* Achievement badge */
     .achievement {
       background: linear-gradient(135deg, #f5a623 0%, #e67e22 100%);
@@ -485,14 +497,69 @@
   </div>
 
   <script>
-    // Generate random stats
+    // Generate random stats based on day-by-day simulation
     function generateStats() {
-      const totalShits = Math.floor(Math.random() * 400) + 300; // 300-700
       const daysInYear = 365;
+      
+      // Weighted distribution for shits per day (0-6)
+      // 1 is most likely, with decreasing probability for higher/lower values
+      const weights = [11, 55, 20, 7, 4, 2, 1]; // weights for 0, 1, 2, 3, 4, 5, 6
+      const totalWeight = weights.reduce((a, b) => a + b, 0);
+      
+      function getRandomShitsForDay() {
+        const rand = Math.random() * totalWeight;
+        let cumulative = 0;
+        for (let i = 0; i < weights.length; i++) {
+          cumulative += weights[i];
+          if (rand < cumulative) return i;
+        }
+        return 1; // fallback
+      }
+      
+      // Day of week names (starting from day 1 = Monday)
+      const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+      
+      // Simulate each day
+      const dailyShits = [];
+      const dayOfWeekTotals = [0, 0, 0, 0, 0, 0, 0]; // Mon-Sun
+      
+      for (let day = 1; day <= daysInYear; day++) {
+        const shitsToday = getRandomShitsForDay();
+        dailyShits.push(shitsToday);
+        
+        // Day of week: day 1 is Monday (index 0), day 7 is Sunday (index 6), etc.
+        const dayOfWeekIndex = (day - 1) % 7;
+        dayOfWeekTotals[dayOfWeekIndex] += shitsToday;
+      }
+      
+      // Calculate stats from daily data
+      const totalShits = dailyShits.reduce((a, b) => a + b, 0);
       const avgPerDay = (totalShits / daysInYear).toFixed(2);
-      const longestStreak = Math.floor(Math.random() * 200) + 100; // 100-300 days
-      const mostInOneDay = Math.floor(Math.random() * 4) + 3; // 3-6
-      const avgDuration = Math.floor(Math.random() * 12) + 5; // 5-16 minutes
+      const mostInOneDay = Math.max(...dailyShits);
+      
+      // Calculate longest streak (consecutive days with at least 1 shit)
+      let longestStreak = 0;
+      let currentStreak = 0;
+      for (const shits of dailyShits) {
+        if (shits >= 1) {
+          currentStreak++;
+          longestStreak = Math.max(longestStreak, currentStreak);
+        } else {
+          currentStreak = 0;
+        }
+      }
+      
+      // Find best day of week
+      const maxDayOfWeekTotal = Math.max(...dayOfWeekTotals);
+      const bestDayOfWeekIndex = dayOfWeekTotals.indexOf(maxDayOfWeekTotal);
+      const bestDayOfWeek = dayNames[bestDayOfWeekIndex];
+      
+      // Normalize day of week totals to percentages for chart
+      const dayOfWeekTotal = dayOfWeekTotals.reduce((a, b) => a + b, 0);
+      const dayOfWeekPercentages = dayOfWeekTotals.map(t => Math.round((t / dayOfWeekTotal) * 100));
+      
+      // Average duration per session (random, 5-16 minutes)
+      const avgDuration = Math.floor(Math.random() * 12) + 5;
       const totalHours = Math.floor((totalShits * avgDuration) / 60);
       
       // Time distribution (morning, afternoon, evening, night)
@@ -545,6 +612,9 @@
         flightsNYLA,
         achievement: randomAchievement,
         percentile,
+        bestDayOfWeek,
+        dayOfWeekTotals,
+        dayOfWeekPercentages,
       };
     }
 
@@ -609,6 +679,16 @@
           showTimeChart: true,
           timeDistribution: stats.timeDistribution,
         },
+        // Best day of week
+        {
+          emoji: '📅',
+          label: 'Best Day',
+          value: stats.bestDayOfWeek,
+          unit: 'is your day',
+          description: `You dropped ${stats.dayOfWeekTotals[['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].indexOf(stats.bestDayOfWeek)]} bombs on ${stats.bestDayOfWeek}s this year!`,
+          showDayChart: true,
+          dayOfWeekPercentages: stats.dayOfWeekPercentages,
+        },
         // Total time
         {
           emoji: '⌛',
@@ -670,6 +750,20 @@
               <span class="time-label">Noon</span>
               <span class="time-label">PM</span>
               <span class="time-label">Night</span>
+            </div>
+          ` : ''}
+          ${slide.showDayChart ? `
+            <div class="time-chart day-chart">
+              ${slide.dayOfWeekPercentages.map(val => `<div class="time-bar" style="height: ${val * 5}%"></div>`).join('')}
+            </div>
+            <div class="time-labels day-labels">
+              <span class="time-label">M</span>
+              <span class="time-label">T</span>
+              <span class="time-label">W</span>
+              <span class="time-label">T</span>
+              <span class="time-label">F</span>
+              <span class="time-label">S</span>
+              <span class="time-label">S</span>
             </div>
           ` : ''}
           ${slide.showAchievement ? `
