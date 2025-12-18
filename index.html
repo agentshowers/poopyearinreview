@@ -601,8 +601,8 @@
       const dayOfWeekTotal = dayOfWeekTotals.reduce((a, b) => a + b, 0);
       const dayOfWeekPercentages = dayOfWeekTotals.map(t => Math.round((t / dayOfWeekTotal) * 100));
       
-      // Average duration per session (random, 5-16 minutes)
-      const avgDuration = Math.floor(Math.random() * 12) + 5;
+      // Average duration per session (random, 2-20 minutes)
+      const avgDuration = Math.floor(Math.random() * 18) + 2;
       const totalTimeHours = Math.floor((totalShits * avgDuration) / 60);
       
       // Find peak hour
@@ -622,23 +622,19 @@
       const hourlyTotal = hourlyTotals.reduce((a, b) => a + b, 0);
       const hourlyPercentages = hourlyTotals.map(t => Math.round((t / hourlyTotal) * 100));
       
-      // Fun comparisons
-      const booksRead = Math.floor(totalTimeHours / 3); // ~3 hours per book
-      const moviesWatched = Math.floor(totalTimeHours / 2); // ~2 hours per movie
-      const flightsNYLA = Math.floor(totalTimeHours / 6); // ~6 hours per flight
+      // Fun comparisons - generate all, then pick 2 randomly
+      const allComparisons = [
+        { text: `reading ${Math.floor(totalTimeHours / 3)} books`, icon: '📚' },
+        { text: `watching ${Math.floor(totalTimeHours / 2)} movies`, icon: '🎬' },
+        { text: `${Math.floor(totalTimeHours / 6)} flights from NY to LA`, icon: '✈️' },
+        { text: `binging ${Math.floor(totalTimeHours / 10)} TV seasons`, icon: '📺' },
+        { text: `${Math.floor(totalTimeHours * 4)} yoga sessions`, icon: '🧘' },
+        { text: `listening to ${Math.floor(totalTimeHours * 20)} songs`, icon: '🎵' },
+      ].filter(c => !c.text.includes(' 0 ') && !c.text.startsWith('0 ')); // Filter out zero values
       
-      // Achievements
-      const achievements = [
-        { icon: '🏆', text: 'Throne Champion' },
-        { icon: '⚡', text: 'Speed Demon' },
-        { icon: '📚', text: 'Scholarly Sitter' },
-        { icon: '🌅', text: 'Early Bird Shitter' },
-        { icon: '🦉', text: 'Night Owl Shitter' },
-        { icon: '🎯', text: 'Consistency King' },
-        { icon: '🚀', text: 'Rocket Launcher' },
-        { icon: '🧘', text: 'Zen Master' },
-      ];
-      const randomAchievement = achievements[Math.floor(Math.random() * achievements.length)];
+      // Shuffle and pick 2
+      const shuffled = allComparisons.sort(() => Math.random() - 0.5);
+      const selectedComparisons = shuffled.slice(0, 2);
       
       // Calculate percentile based on actual distribution
       // Expected value per day: E[X] = sum(i * weight[i]) / totalWeight
@@ -669,6 +665,20 @@
       }
       const percentile = Math.round(normalCDF(zScore) * 100);
       
+      // Achievement based on stats
+      let achievement;
+      if (percentile >= 90) {
+        achievement = { icon: '🏆', text: 'Throne Champion' };
+      } else if (longestStreak > 100) {
+        achievement = { icon: '🎯', text: 'Consistency King' };
+      } else if (avgDuration < 5) {
+        achievement = { icon: '⚡', text: 'Speed Demon' };
+      } else if (avgDuration > 15) {
+        achievement = { icon: '📚', text: 'Scholarly Sitter' };
+      } else {
+        achievement = { icon: '🚀', text: 'Rocket Launcher' };
+      }
+      
       return {
         totalShits,
         avgPerDay,
@@ -680,10 +690,8 @@
         peakHourFormatted,
         hourlyTotals,
         hourlyPercentages,
-        booksRead,
-        moviesWatched,
-        flightsNYLA,
-        achievement: randomAchievement,
+        comparisons: selectedComparisons,
+        achievement,
         percentile,
         bestDayOfWeek,
         dayOfWeekTotals,
@@ -768,7 +776,7 @@
           label: 'Time Invested',
           value: stats.totalHours,
           unit: 'hours total',
-          description: `That's like reading ${stats.booksRead} books or watching ${stats.moviesWatched} movies!`,
+          description: `That's like ${stats.comparisons[0]?.text || 'a lot'} or ${stats.comparisons[1]?.text || 'even more'}!`,
         },
         // Percentile
         {

@@ -1,4 +1,4 @@
 Todo:
 
-- [] Achievements
+- [] Pay to shit
 - [] Share button
