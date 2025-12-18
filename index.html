@@ -290,6 +290,20 @@
       max-width: 280px;
     }
 
+    .hourly-chart {
+      max-width: 320px;
+      gap: 2px;
+    }
+
+    .hourly-chart .time-bar {
+      min-width: 8px;
+      flex: 1;
+    }
+
+    .hourly-labels {
+      max-width: 320px;
+    }
+
     /* Achievement badge */
     .achievement {
       background: linear-gradient(135deg, #f5a623 0%, #e67e22 100%);
@@ -519,9 +533,30 @@
       // Day of week names (starting from day 1 = Monday)
       const dayNames = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
       
+      // Weighted distribution for hour of day (0-23)
+      // Peak around 8-10am and 6-8pm, low at night
+      const hourWeights = [
+        1, 1, 1, 1, 1, 2,    // 0-5 (night/early morning - very low)
+        4, 8, 15, 12, 8, 6,  // 6-11 (morning peak)
+        5, 6, 7, 6, 5, 8,    // 12-17 (afternoon)
+        12, 10, 6, 4, 2, 1   // 18-23 (evening peak, then decline)
+      ];
+      const totalHourWeight = hourWeights.reduce((a, b) => a + b, 0);
+      
+      function getRandomHour() {
+        const rand = Math.random() * totalHourWeight;
+        let cumulative = 0;
+        for (let i = 0; i < hourWeights.length; i++) {
+          cumulative += hourWeights[i];
+          if (rand < cumulative) return i;
+        }
+        return 8; // fallback
+      }
+      
       // Simulate each day
       const dailyShits = [];
       const dayOfWeekTotals = [0, 0, 0, 0, 0, 0, 0]; // Mon-Sun
+      const hourlyTotals = new Array(24).fill(0); // 0-23 hours
       
       for (let day = 1; day <= daysInYear; day++) {
         const shitsToday = getRandomShitsForDay();
@@ -530,6 +565,12 @@
         // Day of week: day 1 is Monday (index 0), day 7 is Sunday (index 6), etc.
         const dayOfWeekIndex = (day - 1) % 7;
         dayOfWeekTotals[dayOfWeekIndex] += shitsToday;
+        
+        // Generate a time for each individual shit
+        for (let i = 0; i < shitsToday; i++) {
+          const hour = getRandomHour();
+          hourlyTotals[hour]++;
+        }
       }
       
       // Calculate stats from daily data
@@ -560,27 +601,29 @@
       
       // Average duration per session (random, 5-16 minutes)
       const avgDuration = Math.floor(Math.random() * 12) + 5;
-      const totalHours = Math.floor((totalShits * avgDuration) / 60);
+      const totalTimeHours = Math.floor((totalShits * avgDuration) / 60);
       
-      // Time distribution (morning, afternoon, evening, night)
-      const timeDistribution = [
-        Math.floor(Math.random() * 30) + 20, // Morning: 20-50%
-        Math.floor(Math.random() * 25) + 15, // Afternoon: 15-40%
-        Math.floor(Math.random() * 20) + 10, // Evening: 10-30%
-        Math.floor(Math.random() * 15) + 5,  // Night: 5-20%
-      ];
-      const total = timeDistribution.reduce((a, b) => a + b, 0);
-      const normalizedTime = timeDistribution.map(t => Math.round((t / total) * 100));
+      // Find peak hour
+      const maxHourlyTotal = Math.max(...hourlyTotals);
+      const peakHour = hourlyTotals.indexOf(maxHourlyTotal);
       
-      // Find peak time
-      const timeLabels = ['Morning', 'Afternoon', 'Evening', 'Night'];
-      const peakTimeIndex = normalizedTime.indexOf(Math.max(...normalizedTime));
-      const peakTime = timeLabels[peakTimeIndex];
+      // Format peak hour for display (e.g., "9 AM", "2 PM")
+      function formatHour(hour) {
+        if (hour === 0) return '12 AM';
+        if (hour === 12) return '12 PM';
+        if (hour < 12) return `${hour} AM`;
+        return `${hour - 12} PM`;
+      }
+      const peakHourFormatted = formatHour(peakHour);
+      
+      // Normalize hourly totals to percentages for chart
+      const hourlyTotal = hourlyTotals.reduce((a, b) => a + b, 0);
+      const hourlyPercentages = hourlyTotals.map(t => Math.round((t / hourlyTotal) * 100));
       
       // Fun comparisons
-      const booksRead = Math.floor(totalHours / 3); // ~3 hours per book
-      const moviesWatched = Math.floor(totalHours / 2); // ~2 hours per movie
-      const flightsNYLA = Math.floor(totalHours / 6); // ~6 hours per flight
+      const booksRead = Math.floor(totalTimeHours / 3); // ~3 hours per book
+      const moviesWatched = Math.floor(totalTimeHours / 2); // ~2 hours per movie
+      const flightsNYLA = Math.floor(totalTimeHours / 6); // ~6 hours per flight
       
       // Achievements
       const achievements = [
@@ -604,9 +647,11 @@
         longestStreak,
         mostInOneDay,
         avgDuration,
-        totalHours,
-        timeDistribution: normalizedTime,
-        peakTime,
+        totalHours: totalTimeHours,
+        peakHour,
+        peakHourFormatted,
+        hourlyTotals,
+        hourlyPercentages,
         booksRead,
         moviesWatched,
         flightsNYLA,
@@ -669,15 +714,15 @@
           unit: 'minutes',
           description: 'Quality time with your thoughts.',
         },
-        // Peak time
+        // Peak hour
         {
-          emoji: stats.peakTime === 'Morning' ? '🌅' : stats.peakTime === 'Night' ? '🌙' : '☀️',
-          label: 'Peak Time',
-          value: stats.peakTime,
+          emoji: stats.peakHour < 6 ? '🌙' : stats.peakHour < 12 ? '🌅' : stats.peakHour < 18 ? '☀️' : '🌆',
+          label: 'Peak Hour',
+          value: stats.peakHourFormatted,
           unit: 'is your prime time',
-          description: 'Your body knows when it\'s time.',
-          showTimeChart: true,
-          timeDistribution: stats.timeDistribution,
+          description: `You dropped ${stats.hourlyTotals[stats.peakHour]} bombs at this hour this year.`,
+          showHourlyChart: true,
+          hourlyPercentages: stats.hourlyPercentages,
         },
         // Best day of week
         {
@@ -741,15 +786,16 @@
           <div class="slide-value">${slide.value}</div>
           ${slide.unit ? `<div class="slide-unit">${slide.unit}</div>` : ''}
           <div class="slide-description">${slide.description}</div>
-          ${slide.showTimeChart ? `
-            <div class="time-chart">
-              ${slide.timeDistribution.map(val => `<div class="time-bar" style="height: ${val}%"></div>`).join('')}
+          ${slide.showHourlyChart ? `
+            <div class="time-chart hourly-chart">
+              ${slide.hourlyPercentages.map(val => `<div class="time-bar" style="height: ${val * 4}%"></div>`).join('')}
             </div>
-            <div class="time-labels">
-              <span class="time-label">AM</span>
-              <span class="time-label">Noon</span>
-              <span class="time-label">PM</span>
-              <span class="time-label">Night</span>
+            <div class="time-labels hourly-labels">
+              <span class="time-label">12a</span>
+              <span class="time-label">6a</span>
+              <span class="time-label">12p</span>
+              <span class="time-label">6p</span>
+              <span class="time-label">12a</span>
             </div>
           ` : ''}
           ${slide.showDayChart ? `
