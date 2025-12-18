@@ -247,61 +247,63 @@
       color: var(--accent-gold);
     }
 
-    /* Time distribution chart */
+    /* Chart container shared styles */
+    .chart-container {
+      width: 100%;
+      max-width: 280px;
+      margin-top: 1.5rem;
+    }
+
     .time-chart {
       display: flex;
       gap: 4px;
       align-items: flex-end;
       height: 80px;
-      margin-top: 1.5rem;
-      padding: 0 10px;
+      width: 100%;
     }
 
     .time-bar {
       flex: 1;
       background: linear-gradient(to top, var(--accent-warm), var(--accent-gold));
       border-radius: 4px 4px 0 0;
-      min-width: 20px;
+      min-width: 0;
       transition: height 0.5s ease;
     }
 
     .time-labels {
       display: flex;
-      justify-content: space-between;
+      gap: 4px;
       width: 100%;
-      max-width: 280px;
       margin-top: 8px;
     }
 
     .time-label {
+      flex: 1;
       font-size: 0.625rem;
       color: var(--text-secondary);
+      text-align: center;
     }
 
-    .day-chart {
+    /* Day of week chart */
+    .day-container {
       max-width: 280px;
     }
 
-    .day-chart .time-bar {
-      min-width: 28px;
-    }
-
-    .day-labels {
-      max-width: 280px;
+    /* Hourly chart */
+    .hourly-container {
+      max-width: 320px;
     }
 
     .hourly-chart {
-      max-width: 320px;
       gap: 2px;
     }
 
-    .hourly-chart .time-bar {
-      min-width: 8px;
-      flex: 1;
+    .hourly-labels {
+      gap: 2px;
     }
 
-    .hourly-labels {
-      max-width: 320px;
+    .hourly-labels .time-label {
+      font-size: 0.5rem;
     }
 
     /* Achievement badge */
@@ -787,29 +789,29 @@
           ${slide.unit ? `<div class="slide-unit">${slide.unit}</div>` : ''}
           <div class="slide-description">${slide.description}</div>
           ${slide.showHourlyChart ? `
-            <div class="time-chart hourly-chart">
-              ${slide.hourlyPercentages.map(val => `<div class="time-bar" style="height: ${val * 4}%"></div>`).join('')}
-            </div>
-            <div class="time-labels hourly-labels">
-              <span class="time-label">12a</span>
-              <span class="time-label">6a</span>
-              <span class="time-label">12p</span>
-              <span class="time-label">6p</span>
-              <span class="time-label">12a</span>
+            <div class="chart-container hourly-container">
+              <div class="time-chart hourly-chart">
+                ${slide.hourlyPercentages.map(val => `<div class="time-bar" style="height: ${val * 4}%"></div>`).join('')}
+              </div>
+              <div class="time-labels hourly-labels">
+                ${Array.from({length: 24}, (_, i) => `<span class="time-label">${i % 6 === 0 ? (i === 0 ? '12a' : i === 6 ? '6a' : i === 12 ? '12p' : '6p') : ''}</span>`).join('')}
+              </div>
             </div>
           ` : ''}
           ${slide.showDayChart ? `
-            <div class="time-chart day-chart">
-              ${slide.dayOfWeekPercentages.map(val => `<div class="time-bar" style="height: ${val * 5}%"></div>`).join('')}
-            </div>
-            <div class="time-labels day-labels">
-              <span class="time-label">M</span>
-              <span class="time-label">T</span>
-              <span class="time-label">W</span>
-              <span class="time-label">T</span>
-              <span class="time-label">F</span>
-              <span class="time-label">S</span>
-              <span class="time-label">S</span>
+            <div class="chart-container day-container">
+              <div class="time-chart">
+                ${slide.dayOfWeekPercentages.map(val => `<div class="time-bar" style="height: ${val * 5}%"></div>`).join('')}
+              </div>
+              <div class="time-labels">
+                <span class="time-label">M</span>
+                <span class="time-label">T</span>
+                <span class="time-label">W</span>
+                <span class="time-label">T</span>
+                <span class="time-label">F</span>
+                <span class="time-label">S</span>
+                <span class="time-label">S</span>
+              </div>
             </div>
           ` : ''}
           ${slide.showAchievement ? `

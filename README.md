@@ -1,4 +1,6 @@
 Todo:
 
-- [] Favicon
-- [] Kilograms
+- [] Fix graphs
+- [] Achievements
+- [] %
+- [] Share button
