@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>💩 Your 2025 Poop Year in Review</title>
+  <title>💩 Your 2025 Year in Shit</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
@@ -487,13 +487,13 @@
   <script>
     // Generate random stats
     function generateStats() {
-      const totalPoops = Math.floor(Math.random() * 400) + 300; // 300-700
+      const totalShits = Math.floor(Math.random() * 400) + 300; // 300-700
       const daysInYear = 365;
-      const avgPerDay = (totalPoops / daysInYear).toFixed(1);
+      const avgPerDay = (totalShits / daysInYear).toFixed(1);
       const longestStreak = Math.floor(Math.random() * 200) + 100; // 100-300 days
       const mostInOneDay = Math.floor(Math.random() * 4) + 3; // 3-6
       const avgDuration = Math.floor(Math.random() * 12) + 5; // 5-16 minutes
-      const totalHours = Math.floor((totalPoops * avgDuration) / 60);
+      const totalHours = Math.floor((totalShits * avgDuration) / 60);
       
       // Time distribution (morning, afternoon, evening, night)
       const timeDistribution = [
@@ -520,8 +520,8 @@
         { icon: '🏆', text: 'Throne Champion' },
         { icon: '⚡', text: 'Speed Demon' },
         { icon: '📚', text: 'Scholarly Sitter' },
-        { icon: '🌅', text: 'Early Bird Pooper' },
-        { icon: '🦉', text: 'Night Owl Pooper' },
+        { icon: '🌅', text: 'Early Bird Shitter' },
+        { icon: '🦉', text: 'Night Owl Shitter' },
         { icon: '🎯', text: 'Consistency King' },
         { icon: '🚀', text: 'Rocket Launcher' },
         { icon: '🧘', text: 'Zen Master' },
@@ -532,7 +532,7 @@
       const percentile = Math.floor(Math.random() * 30) + 70; // Top 70-100%
       
       return {
-        totalPoops,
+        totalShits,
         avgPerDay,
         longestStreak,
         mostInOneDay,
@@ -556,14 +556,14 @@
           type: 'intro',
           emoji: '💩',
           label: 'Your 2025',
-          value: 'Poop Year in Review',
+          value: 'Shit Year in Review',
           description: "Let's look back at your bathroom adventures this year...",
         },
-        // Total poops
+        // Total shits
         {
           emoji: '🚽',
-          label: 'Total Poops',
-          value: stats.totalPoops.toLocaleString(),
+          label: 'Total Shits',
+          value: stats.totalShits.toLocaleString(),
           unit: 'visits',
           description: 'You really kept yourself busy this year!',
         },
@@ -572,7 +572,7 @@
           emoji: '📊',
           label: 'Daily Average',
           value: stats.avgPerDay,
-          unit: 'poops per day',
+          unit: 'shits per day',
           description: "That's your personal rhythm!",
         },
         // Longest streak
@@ -588,7 +588,7 @@
           emoji: '💥',
           label: 'Record Day',
           value: stats.mostInOneDay,
-          unit: 'poops in one day',
+          unit: 'shits in one day',
           description: 'We all have those days. No judgment here.',
         },
         // Average duration
@@ -622,7 +622,7 @@
           emoji: '🏅',
           label: 'Your Rank',
           value: `Top ${100 - stats.percentile}%`,
-          unit: 'of all poopers',
+          unit: 'of all shitters',
           description: 'Among our community of bathroom enthusiasts.',
         },
         // Achievement
@@ -681,8 +681,8 @@
           ${slide.showSummary ? `
             <div class="summary-card">
               <div class="summary-row">
-                <span class="summary-label"><span class="summary-label-icon">🚽</span> Total Poops</span>
-                <span class="summary-value">${slide.stats.totalPoops.toLocaleString()}</span>
+                <span class="summary-label"><span class="summary-label-icon">🚽</span> Total Shits</span>
+                <span class="summary-value">${slide.stats.totalShits.toLocaleString()}</span>
               </div>
               <div class="summary-row">
                 <span class="summary-label"><span class="summary-label-icon">📊</span> Daily Avg</span>
@@ -837,11 +837,11 @@
 
     // Share functionality
     function shareResults() {
-      const shareText = `💩 My 2025 Poop Year in Review is here! Check out your stats too!`;
+      const shareText = `💩 My 2025 Year in Shit is here! Check out your stats too!`;
       
       if (navigator.share) {
         navigator.share({
-          title: 'Poop Year in Review 2025',
+          title: 'Year in Shit 2025',
           text: shareText,
           url: window.location.href,
         }).catch(() => {});
