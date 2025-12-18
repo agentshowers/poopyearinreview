@@ -559,6 +559,7 @@
       const dailyShits = [];
       const dayOfWeekTotals = [0, 0, 0, 0, 0, 0, 0]; // Mon-Sun
       const hourlyTotals = new Array(24).fill(0); // 0-23 hours
+      let workShits = 0; // Shits during work hours (9am-6pm Mon-Fri)
       
       for (let day = 1; day <= daysInYear; day++) {
         const shitsToday = getRandomShitsForDay();
@@ -566,12 +567,18 @@
         
         // Day of week: day 1 is Monday (index 0), day 7 is Sunday (index 6), etc.
         const dayOfWeekIndex = (day - 1) % 7;
+        const isWeekday = dayOfWeekIndex < 5; // Mon-Fri
         dayOfWeekTotals[dayOfWeekIndex] += shitsToday;
         
         // Generate a time for each individual shit
         for (let i = 0; i < shitsToday; i++) {
           const hour = getRandomHour();
           hourlyTotals[hour]++;
+          
+          // Check if this is a work shit (9am-6pm on weekdays)
+          if (isWeekday && hour >= 9 && hour < 18) {
+            workShits++;
+          }
         }
       }
       
@@ -604,6 +611,11 @@
       // Average duration per session (random, 2-20 minutes)
       const avgDuration = Math.floor(Math.random() * 18) + 2;
       const totalTimeHours = Math.floor((totalShits * avgDuration) / 60);
+      
+      // Paid shitting time (work hours: 9am-6pm Mon-Fri)
+      const paidShitMinutes = workShits * avgDuration;
+      const paidShitHours = Math.floor(paidShitMinutes / 60);
+      const paidShitRemainingMins = paidShitMinutes % 60;
       
       // Find peak hour
       const maxHourlyTotal = Math.max(...hourlyTotals);
@@ -686,6 +698,9 @@
         mostInOneDay,
         avgDuration,
         totalHours: totalTimeHours,
+        workShits,
+        paidShitHours,
+        paidShitRemainingMins,
         peakHour,
         peakHourFormatted,
         hourlyTotals,
@@ -777,6 +792,14 @@
           value: stats.totalHours,
           unit: 'hours total',
           description: `That's like ${stats.comparisons[0]?.text || 'a lot'} or ${stats.comparisons[1]?.text || 'even more'}!`,
+        },
+        // Paid to shit
+        {
+          emoji: '💰',
+          label: 'Paid to Shit',
+          value: stats.paidShitHours > 0 ? `${stats.paidShitHours}h ${stats.paidShitRemainingMins}m` : `${stats.paidShitRemainingMins} min`,
+          unit: 'time spent shitting during work hours',
+          description: `Boss makes a dollar, you make a dime...`,
         },
         // Percentile
         {
